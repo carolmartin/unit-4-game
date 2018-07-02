@@ -59,7 +59,7 @@
 
         <p>The value of each gummy is hidden from you until you click on it.</p>
 
-        <p>You win the game by matching your total score to random number. You lose teh game if your total score goes above
+        <p>You win the game by matching your total score to random number. You lose the game if your total score goes above
             the random number</p>
 
 
@@ -67,9 +67,16 @@
             <span id="numberToGuess"></span>
         </h1>
 
-        <div id="images">
+        <h1>Total Guess Counter:
+            <span id="counter"></span>
+        </h1>
 
-        </div>
+
+
+        <div id="images"></div>
+
+
+
     </div>
 
     <script type="text/javascript">
@@ -80,8 +87,10 @@
         var counter = 0;
 
         // Calculate a random number betwen 19 and 120 and display this in numberToGuess -->
+        numberToGuess = Math.floor((Math.random() * 120) + 19);
 
-        $("#numberToGuess").text(Math.floor((Math.random() * 120) + 19));
+        // $("#numberToGuess").text(Math.floor((Math.random() * 120) + 19));
+        document.getElementById('numberToGuess').innerHTML = numberToGuess;
         console.log(numberToGuess);
 
         $(document).ready(function () {
@@ -117,18 +126,39 @@
                 $("#images").append(imgGummy);
 
             }
-        });
-        // On-click of the gummy, add the hidden amount to the tally. if the tally is  equal 
-        // to the number to Guess - will add one to winner.
-        // $(".gummyImage").on("click", function () {
-        $(".gummyImage").on("click", function () {
-            console.log("in on click");
+            // On-click of the gummy, add the hidden amount to the tally. if the tally is  equal 
+            // to the number to Guess - will add one to winner.
+            $(".gummyImage").on("click", function () {
 
-            var gummyValue = ($(this).attr("gummyNumber"));
-            gummyValue = parseInt(gummyValue);
-            console.log("in on click. gummyValue is " + gummyValue);
-            counter += gummyValue;
-            console.log("counter is : " + counter);
+                var gummyValue = ($(this).attr("gummyNumber"));
+                gummyValue = parseInt(gummyValue);
+                console.log("in on click. gummyValue is " + gummyValue);
+                // Add the Value assigned to the gummy to a counter
+                counter += gummyValue;
+                console.log("counter is : " + counter);
+                //display counter in the header information
+                document.getElementById('counter').innerHTML = counter;
+                // Compare counter with the Random number we are trying to match
+                compareValues(counter, numberToGuess);
+
+
+            });
+            function compareValues(counter, numberToGuess) {
+                var intToGuess = parseInt(numberToGuess);
+                console.log("compare values function" + counter);
+                console.log("compare numberto Guess: " + numberToGuess);
+
+                if (counter > intToGuess) {
+                    losses += losses;
+                    alert("You lost!");
+                }
+                else if (counter == intToGuess) {
+                    wins += wins;
+                    alert("You won!");
+                }
+
+
+            };
 
         });
     </script>
