@@ -72,15 +72,22 @@
         </h1>
 
 
-
         <div id="images"></div>
 
+
+
+        <h3>Wins:
+            <span id="wins"></span>
+        </h3>
+        <h3>Losses:
+            <span id="losses"></span>
+        </h3>
 
 
     </div>
 
     <script type="text/javascript">
-        var numberToGuess;
+        var numberToGuess = 0;
         var wins = 0;
         var losses = 0;
         var tallyGuess = 0;
@@ -141,7 +148,6 @@
                 // Compare counter with the Random number we are trying to match
                 compareValues(counter, numberToGuess);
 
-
             });
             function compareValues(counter, numberToGuess) {
                 var intToGuess = parseInt(numberToGuess);
@@ -149,16 +155,74 @@
                 console.log("compare numberto Guess: " + numberToGuess);
 
                 if (counter > intToGuess) {
-                    losses += losses;
-                    alert("You lost!");
+                    losses++;
+                    alert("You lost! Try again. ");
+                    resetValues();
+
+
                 }
                 else if (counter == intToGuess) {
-                    wins += wins;
-                    alert("You won!");
+                    wins++;
+                    alert("You won! Congratulations! Play again. ");
+                    resetValues();
                 }
 
+                document.getElementById('losses').innerHTML = losses;
+
+                document.getElementById('wins').innerHTML = wins;
+            };
+
+            // RESET THE RANDM NUMBER, GUMMY VALUES FOR A NEW GAME
+            function resetValues() {
+                var intToGuess = 0;
+                console.log("reset values for new game");
+
+                // Calculate a random number betwen 19 and 120 and display this in numberToGuess -->
+                intToGuess = Math.floor((Math.random() * 120) + 19);
+                numberToGuess = intToGuess;
+                counter = 0;
+
+                
+                document.getElementById('numberToGuess').innerHTML = intToGuess;
+
+                document.getElementById('counter').innerHTML = counter;
+
+                console.log(intToGuess);
+                console.log("number to guess " + numberToGuess);
+                console.log("counter reset to: " + counter);
+
+                // Reset gummy Values
+
+                // for (var i = 0; i < gummies.length; i++) {
+
+                //     // // give each "imgGummy" the following classes: "gummy-img" "gummy"
+                //     // imgGummy.addClass("gummyImage");
+                //     // console.log("added gummyImage class");
+                //     // give each gummyImg an attribute to hold the random value
+                //     var gummyRandomNum = Math.floor(Math.random() * 12 + 1);
+                //     console.log("gummy random # is " + gummyRandomNum);
+                //     imgGummy.attr("gummyNumber", gummyRandomNum);
+                //     // map the appropriate img based on the index to imgGummy
+                //     if (gummies[i] === "yellow") {
+                //         imgGummy.attr("src", "assets/images/gummy-yellow.jpg")
+                //         console.log("yellow")
+                //     }
+                //     else if (gummies[i] === "red") {
+                //         imgGummy.attr("src", "assets/images/gummy-red.jpg")
+                //     }
+                //     else if (gummies[i] === "green") {
+                //         imgGummy.attr("src", "assets/images/gummy-green.jpg")
+                //     }
+                //     else {
+                //         imgGummy.attr("src", "assets/images/gummy-orange.jpg")
+                //     }
+
+                //     $("#images").append(imgGummy);
+
+                // }
 
             };
+
 
         });
     </script>
