@@ -92,142 +92,82 @@
         var losses = 0;
         var tallyGuess = 0;
         var counter = 0;
-
-        // Calculate a random number betwen 19 and 120 and display this in numberToGuess -->
-        numberToGuess = Math.floor((Math.random() * 120) + 19);
-
-        // $("#numberToGuess").text(Math.floor((Math.random() * 120) + 19));
-        document.getElementById('numberToGuess').innerHTML = numberToGuess;
-        console.log(numberToGuess);
-
+        
         $(document).ready(function () {
 
-            // initialize the gummy buttons
-            var gummies = ['yellow', 'red', 'green', 'orange'];
-            // Create a for loop to iterate through the gummy colors array.
-            for (var i = 0; i < gummies.length; i++) {
-                var imgGummy = $("<img>");
-                console.log("created image" + i);
-                // give each "imgGummy" the following classes: "gummy-img" "gummy"
-                imgGummy.addClass("gummyImage");
-                console.log("added gummyImage class");
-                // give each gummyImg an attribute to hold the random value
-                var gummyRandomNum = Math.floor(Math.random() * 12 + 1);
-                console.log("gummy random # is " + gummyRandomNum);
-                imgGummy.attr("gummyNumber", gummyRandomNum);
-                // map the appropriate img based on the index to imgGummy
-                if (gummies[i] === "yellow") {
-                    imgGummy.attr("src", "assets/images/gummy-yellow.jpg")
-                    console.log("yellow")
-                }
-                else if (gummies[i] === "red") {
-                    imgGummy.attr("src", "assets/images/gummy-red.jpg")
-                }
-                else if (gummies[i] === "green") {
-                    imgGummy.attr("src", "assets/images/gummy-green.jpg")
-                }
-                else {
-                    imgGummy.attr("src", "assets/images/gummy-orange.jpg")
-                }
+            // Set up a table for the gummy images 
 
-                $("#images").append(imgGummy);
-
-            }
-            // On-click of the gummy, add the hidden amount to the tally. if the tally is  equal 
-            // to the number to Guess - will add one to winner.
-            $(".gummyImage").on("click", function () {
-
-                var gummyValue = ($(this).attr("gummyNumber"));
-                gummyValue = parseInt(gummyValue);
-                console.log("in on click. gummyValue is " + gummyValue);
-                // Add the Value assigned to the gummy to a counter
-                counter += gummyValue;
-                console.log("counter is : " + counter);
-                //display counter in the header information
-                document.getElementById('counter').innerHTML = counter;
-                // Compare counter with the Random number we are trying to match
-                compareValues(counter, numberToGuess);
-
+            var gummyImgs = ["assets/images/gummy-yellow.jpg", "assets/images/gummy-red.jpg", "assets/images/gummy-orange.jpg", "assets/images/gummy-green.jpg"];
+            
+            // for each gummy, add the source and a gummyImage class.
+            // The gummyImage class will be used to define and reference a data-value to hold a random value.
+            gummyImgs.forEach(function (img) {
+                var $img = $("<img>").attr("src", img).addClass("gummyImage");
+                // JQuery to append gummy image into image id and display on HTML screen
+                $("#images").append($img);
             });
-            function compareValues(counter, numberToGuess) {
-                var intToGuess = parseInt(numberToGuess);
-                console.log("compare values function" + counter);
-                console.log("compare numberto Guess: " + numberToGuess);
 
-                if (counter > intToGuess) {
+            // When a gummyImage is clicked, add the value to the counter and compare the counter with the number to Guess. 
+
+            $(".gummyImage").on("click", function () {
+                // Assign value to the gummyImage value. 
+                var value = $(this).data().value;
+
+                // Add the value to counter
+                counter += value;
+
+                // Use JQuery to updated the counter id in HTML
+
+                $("#counter").text(counter);
+                // if the user counter is more than the number to Guess, you loss. The losses is incremented and the game initalizeed.
+                
+                if (counter > numberToGuess) {
+
                     losses++;
-                    alert("You lost! Try again. ");
-                    resetValues();
+                    initGame();
 
+                } 
+            // if the user counter is equal  to the number to Guess, you win. The wins is incremented and the game initalizeed.
 
-                }
-                else if (counter == intToGuess) {
+                else if (counter === numberToGuess) {
                     wins++;
-                    alert("You won! Congratulations! Play again. ");
-                    resetValues();
+                    initGame();
                 }
+            });
 
-                document.getElementById('losses').innerHTML = losses;
 
-                document.getElementById('wins').innerHTML = wins;
-            };
-
-            // RESET THE RANDM NUMBER, GUMMY VALUES FOR A NEW GAME
-            function resetValues() {
-                var intToGuess = 0;
-                console.log("reset values for new game");
-
-                // Calculate a random number betwen 19 and 120 and display this in numberToGuess -->
-                intToGuess = Math.floor((Math.random() * 120) + 19);
-                numberToGuess = intToGuess;
+            function initGame() {
+                // Recalcuate the number to Guess using a random number to get an number between 19 - 120 
+                
+                numberToGuess = Math.floor((Math.random() * 102) + 19);
                 counter = 0;
 
-                
-                document.getElementById('numberToGuess').innerHTML = intToGuess;
+                // JQuery to assign a random number to each gummyImage
 
-                document.getElementById('counter').innerHTML = counter;
+                $(".gummyImage").each(function (elem) {
+                    var randomValue = Math.ceil(Math.random() * 12 +1);
+                    $(this).attr("data-value", randomValue);
+                });
 
-                console.log(intToGuess);
-                console.log("number to guess " + numberToGuess);
-                console.log("counter reset to: " + counter);
+                // JQuery to update id's wins, losses, counter and numberToGuess
 
-                // Reset gummy Values
+                $("#wins").text(wins);
+                $("#losses").text(losses);
+                $("#counter").text(counter);
+                $("#numberToGuess").html(numberToGuess);
+            }
 
-                // for (var i = 0; i < gummies.length; i++) {
+            // Call function to initGame. This is actually done on the load document since it falls within the 
+            // document.ready function!
 
-                //     // // give each "imgGummy" the following classes: "gummy-img" "gummy"
-                //     // imgGummy.addClass("gummyImage");
-                //     // console.log("added gummyImage class");
-                //     // give each gummyImg an attribute to hold the random value
-                //     var gummyRandomNum = Math.floor(Math.random() * 12 + 1);
-                //     console.log("gummy random # is " + gummyRandomNum);
-                //     imgGummy.attr("gummyNumber", gummyRandomNum);
-                //     // map the appropriate img based on the index to imgGummy
-                //     if (gummies[i] === "yellow") {
-                //         imgGummy.attr("src", "assets/images/gummy-yellow.jpg")
-                //         console.log("yellow")
-                //     }
-                //     else if (gummies[i] === "red") {
-                //         imgGummy.attr("src", "assets/images/gummy-red.jpg")
-                //     }
-                //     else if (gummies[i] === "green") {
-                //         imgGummy.attr("src", "assets/images/gummy-green.jpg")
-                //     }
-                //     else {
-                //         imgGummy.attr("src", "assets/images/gummy-orange.jpg")
-                //     }
-
-                //     $("#images").append(imgGummy);
-
-                // }
-
-            };
-
+            initGame();
 
         });
+
     </script>
 
 
 </body>
 
 </html>
+

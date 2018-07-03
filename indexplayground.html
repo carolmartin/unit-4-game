@@ -19,15 +19,6 @@
 </head>
 <!-- CSS Styles -->
 <style>
-    .gummy-image {
-        width: 60px;
-        height: 60px;
-        border-style: solid;
-        padding: 4px;
-        float: left;
-        margin: 2px;
-    }
-
     #display {
         margin-top: 78px;
         height: 500px;
@@ -41,6 +32,15 @@
 
     #buttons {
         padding-top: 60px;
+    }
+
+    .gummyImage {
+        width: 60px;
+        height: 60px;
+        border-style: solid;
+        padding: 4px;
+        float: left;
+        margin: 2px;
     }
 </style>
 
@@ -59,7 +59,7 @@
 
         <p>The value of each gummy is hidden from you until you click on it.</p>
 
-        <p>You win the game by matching your total score to random number. You lose teh game if your total score goes above
+        <p>You win the game by matching your total score to random number. You lose the game if your total score goes above
             the random number</p>
 
 
@@ -67,67 +67,107 @@
             <span id="numberToGuess"></span>
         </h1>
 
-        <div id="images">
+        <h1>Total Guess Counter:
+            <span id="counter"></span>
+        </h1>
 
-        </div>
 
-        <script>
-            var numberToGuess;
-            var wins = 0;
-            var losses = 0;
-
-            // Calculate a random number betwen 19 and 120 and display this in numberToGuess -->
-
-            $("#numberToGuess").text(Math.floor((Math.random() * 120) + 19));
-            console.log(numberToGuess);
+        <div id="images"></div>
 
 
 
-            $(document).ready(function () {
-
-                // initialize the gummy buttons
-                var gummies = ['yellow', 'red', 'green', 'orange'];
-                // Create a for loop to iterate through the gummy colors array.
-                for (var i = 0; i < gummies.length; i++) {
-                    var imgGummy = $("<img>");
-                    console.log("created image" + i);
-                    // give each "imgGummy" the following classes: "gummy-img" "gummy"
-                    imgGummy.addClass("gummy-image", "gummy");
-                    console.log("added imgGummy class");
-                    // give each gummyBtn a attribute to hold the random value
-                    var gummyRandomNum = Math.floor(Math.random() * 12 + 1);
-                    console.log("gummy random # is " + gummyRandomNum);
-                    imgGummy.attr("gummyNumber", gummyRandomNum);
-                    if (gummies[i] === "yellow") {
-                        imgGummy.attr("src", "assets/images/gummy-yellow.jpg")
-                        console.log("yellow")
-                    }
-                    else if (gummies[i] === "red") {
-                        imgGummy.attr("src", "assets/images/gummy-red.jpg")
-                    }
-                    else if (gummies[i] === "green") {
-                        imgGummy.attr("src", "assets/images/gummy-green.jpg")
-                    }
-                    else {
-                        imgGummy.attr("src", "assets/images/gummy-orange.jpg")
-                    }
-
-                    $("#images").append(imgGummy);
+        <h3>Wins:
+            <span id="wins"></span>
+        </h3>
+        <h3>Losses:
+            <span id="losses"></span>
+        </h3>
 
 
+    </div>
 
+    <script type="text/javascript">
+        var numberToGuess = 0;
+        var wins = 0;
+        var losses = 0;
+        var tallyGuess = 0;
+        var counter = 0;
+        
+        $(document).ready(function () {
 
+            // Set up a table for the gummy images 
+
+            var gummyImgs = ["assets/images/gummy-yellow.jpg", "assets/images/gummy-red.jpg", "assets/images/gummy-orange.jpg", "assets/images/gummy-green.jpg"];
+            
+            // for each gummy, add the source and a gummyImage class.
+            // The gummyImage class will be used to define and reference a data-value to hold a random value.
+            gummyImgs.forEach(function (img) {
+                var $img = $("<img>").attr("src", img).addClass("gummyImage");
+                // JQuery to append gummy image into image id and display on HTML screen
+                $("#images").append($img);
+            });
+
+            // When a gummyImage is clicked, add the value to the counter and compare the counter with the number to Guess. 
+
+            $(".gummyImage").on("click", function () {
+                // Assign value to the gummyImage value. 
+                var value = $(this).data().value;
+
+                // Add the value to counter
+                counter += value;
+
+                // Use JQuery to updated the counter id in HTML
+
+                $("#counter").text(counter);
+                // if the user counter is more than the number to Guess, you loss. The losses is incremented and the game initalizeed.
+                
+                if (counter > numberToGuess) {
+
+                    losses++;
+                    initGame();
+
+                } 
+            // if the user counter is equal  to the number to Guess, you win. The wins is incremented and the game initalizeed.
+
+                else if (counter === numberToGuess) {
+                    wins++;
+                    initGame();
                 }
             });
 
 
-    // <script type="text/javascript">
+            function initGame() {
+                // Recalcuate the number to Guess using a random number to get an number between 19 - 120 
+                
+                numberToGuess = Math.floor((Math.random() * 102) + 19);
+                counter = 0;
 
-    //     var numberToGuess;
-    //     var wins = 0;
-    //     var losses = 0;
-    // </script>
+                // JQuery to assign a random number to each gummyImage
+
+                $(".gummyImage").each(function (elem) {
+                    var randomValue = Math.ceil(Math.random() * 12 +1);
+                    $(this).attr("data-value", randomValue);
+                });
+
+                // JQuery to update id's wins, losses, counter and numberToGuess
+
+                $("#wins").text(wins);
+                $("#losses").text(losses);
+                $("#counter").text(counter);
+                $("#numberToGuess").html(numberToGuess);
+            }
+
+            // Call function to initGame. This is actually done on the load document since it falls within the 
+            // document.ready function!
+
+            initGame();
+
+        });
+
+    </script>
+
 
 </body>
 
 </html>
+
